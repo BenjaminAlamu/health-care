@@ -9,6 +9,7 @@ export async function fetchBillingData(): Promise<BillingRecord[]> {
 export async function fetchBillingStats(): Promise<{
   totalAmount: number;
   statusCounts: StatusCount[];
+  amountByStatus: { status: string; count: number }[];
   totalClaims: number;
 }> {
   await new Promise((resolve) => setTimeout(resolve, 300));
@@ -17,9 +18,15 @@ export async function fetchBillingStats(): Promise<{
   const totalAmount = data.reduce((sum, record) => sum + record.amount, 0);
 
   const statusMap = new Map<string, number>();
+  const statusAmountMap = new Map<string, number>();
+
   data.forEach((record) => {
     const status = record.payment_status;
     statusMap.set(status, (statusMap.get(status) || 0) + 1);
+    statusAmountMap.set(
+      status,
+      (statusAmountMap.get(status) || 0) + record.amount
+    );
   });
 
   const statusCounts = Array.from(statusMap.entries()).map(
@@ -29,9 +36,17 @@ export async function fetchBillingStats(): Promise<{
     })
   );
 
+  const amountByStatus = Array.from(statusAmountMap.entries()).map(
+    ([status, count]) => ({
+      status,
+      count,
+    })
+  );
+
   return {
     totalAmount,
     statusCounts,
+    amountByStatus,
     totalClaims: data.length,
   };
 }

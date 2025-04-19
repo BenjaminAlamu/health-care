@@ -8,7 +8,7 @@ import { fetchBillingData, fetchBillingStats } from '@/lib/actions';
 export default async function Home() {
   // Fetch data using imported functions (not server actions in this version)
   const billingData = await fetchBillingData();
-  const { totalAmount, statusCounts, totalClaims } = await fetchBillingStats();
+  const { totalAmount, statusCounts, totalClaims, amountByStatus } = await fetchBillingStats();
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -30,6 +30,7 @@ export default async function Home() {
               totalAmount={totalAmount}
               statusCounts={statusCounts}
               totalClaims={totalClaims}
+              amountByStatus={amountByStatus}
             />
           </Suspense>
 

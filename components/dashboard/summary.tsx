@@ -9,9 +9,10 @@ interface DashboardSummaryProps {
   totalAmount: number;
   statusCounts: StatusCount[];
   totalClaims: number;
+  amountByStatus: { status: string; count: number }[];
 }
 
-export function DashboardSummary({ totalAmount, statusCounts, totalClaims }: DashboardSummaryProps) {
+export function DashboardSummary({ totalAmount, statusCounts, totalClaims, amountByStatus }: DashboardSummaryProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Approved": return "hsl(var(--chart-2))";
@@ -42,16 +43,16 @@ export function DashboardSummary({ totalAmount, statusCounts, totalClaims }: Das
         </CardHeader>
         <CardContent className="pb-0">
           <div className="space-y-2">
-            {statusCounts.map((status) => (
+            {amountByStatus.map((status) => (
               <div key={status.status} className="flex items-center">
                 <div className={cn("h-3 w-3 rounded-full mr-2")}
                   style={{ backgroundColor: getStatusColor(status.status) }} />
                 <div className="flex-1">
                   <div className="text-sm">{status.status}</div>
                 </div>
-                <div>{status.count}</div>
+                <div>${status.count}</div>
                 <div className="ml-2 text-muted-foreground">
-                  {Math.round((status.count / totalClaims) * 100)}%
+                  {Math.round((status.count / totalAmount) * 100)}%
                 </div>
               </div>
             ))}
@@ -68,7 +69,7 @@ export function DashboardSummary({ totalAmount, statusCounts, totalClaims }: Das
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={statusCounts}
+                data={amountByStatus}
                 cx="50%"
                 cy="50%"
                 outerRadius={80}
@@ -76,7 +77,7 @@ export function DashboardSummary({ totalAmount, statusCounts, totalClaims }: Das
                 nameKey="status"
                 label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
               >
-                {statusCounts.map((entry, index) => (
+                {amountByStatus.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={getStatusColor(entry.status)}
@@ -84,7 +85,7 @@ export function DashboardSummary({ totalAmount, statusCounts, totalClaims }: Das
                 ))}
               </Pie>
               <Tooltip
-                formatter={(value: number, name: string) => [`${value} claims`, name]}
+                formatter={(value: number, name: string) => [`$${value}`, name]}
               />
               <Legend />
             </PieChart>
