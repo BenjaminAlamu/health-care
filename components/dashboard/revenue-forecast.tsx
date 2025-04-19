@@ -135,7 +135,7 @@ export function RevenueForecast({ data }: RevenueForecastProps) {
                   <div className="grid grid-cols-2 gap-2">
                     <div className="rounded-lg border p-3">
                       <div className="text-xs text-muted-foreground">Expected Revenue</div>
-                      <div className="mt-1 text-xl font-bold">
+                      <div className="mt-1 text-3xl font-bold">
                         {formatCurrency(simulationResult.expectedRevenue)}
                       </div>
                     </div>

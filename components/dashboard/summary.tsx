@@ -64,7 +64,7 @@ export function DashboardSummary({ totalAmount, statusCounts, totalClaims }: Das
           <CardTitle className="text-lg">Claims Distribution</CardTitle>
           <CardDescription>By payment status</CardDescription>
         </CardHeader>
-        <CardContent className="h-[250px]">
+        <CardContent className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -74,7 +74,7 @@ export function DashboardSummary({ totalAmount, statusCounts, totalClaims }: Das
                 outerRadius={80}
                 dataKey="count"
                 nameKey="status"
-
+                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
               >
                 {statusCounts.map((entry, index) => (
                   <Cell
